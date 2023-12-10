@@ -169,7 +169,7 @@
         <GPU_ARCHS>RAPIDS</GPU_ARCHS>
         <CUDF_JNI_LIBCUDF_STATIC>OFF</CUDF_JNI_LIBCUDF_STATIC>
         <native.build.path>${project.build.directory}/cmake-build</native.build.path>
-        <slf4j.version>1.7.30</slf4j.version>
+        <slf4j.version>1.7.36</slf4j.version>
         <arrow.version>0.15.1</arrow.version>
         <parallel.level>4</parallel.level>
         <CUDF_CPP_BUILD_DIR/>
@@ -459,14 +459,12 @@
                         <configuration>
                             <tasks>
                                 <mkdir dir="${native.build.path}"/>
-                                <exec dir="${native.build.path}"
-                                      failonerror="true"
-                                      executable="cmake">
+                                <exec dir="${native.build.path}" failonerror="true" executable="cmake">
                                     <arg value="${basedir}/src/main/native"/>
                                     <arg line="${cmake.ccache.opts}"/>
-                                    <arg value="-DCUDA_STATIC_RUNTIME=${CUDA_STATIC_RUNTIME}" />
-                                    <arg value="-DCUDF_USE_PER_THREAD_DEFAULT_STREAM=${CUDF_USE_PER_THREAD_DEFAULT_STREAM}" />
-                                    <arg value="-DUSE_GDS=${USE_GDS}" />
+                                    <arg value="-DCUDA_STATIC_RUNTIME=${CUDA_STATIC_RUNTIME}"/>
+                                    <arg value="-DCUDF_USE_PER_THREAD_DEFAULT_STREAM=${CUDF_USE_PER_THREAD_DEFAULT_STREAM}"/>
+                                    <arg value="-DUSE_GDS=${USE_GDS}"/>
                                     <arg value="-DCMAKE_CXX_FLAGS=${cxx.flags}"/>
                                     <arg value="-DCMAKE_EXPORT_COMPILE_COMMANDS=${CMAKE_EXPORT_COMPILE_COMMANDS}"/>
                                     <arg value="-DCUDF_CPP_BUILD_DIR=${CUDF_CPP_BUILD_DIR}"/>
@@ -475,17 +473,14 @@
                                     <arg value="-DCUDF_JNI_ENABLE_PROFILING=${CUDF_JNI_ENABLE_PROFILING}"/>
                                     <arg value="-DBUILD_SHARED_LIBS=ON"/>
                                 </exec>
-                                <exec dir="${native.build.path}"
-                                      failonerror="true"
-                                      executable="cmake">
+                                <exec dir="${native.build.path}" failonerror="true" executable="cmake">
                                     <arg value="--build"/>
                                     <arg value="."/>
                                     <arg value="--parallel"/>
                                     <arg value="${parallel.level}"/>
                                 </exec>
                                 <mkdir dir="${project.build.directory}/extra-resources"/>
-                                <exec executable="bash"
-                                      output="${project.build.directory}/extra-resources/cudf-java-version-info.properties">
+                                <exec executable="bash" output="${project.build.directory}/extra-resources/cudf-java-version-info.properties">
                                     <arg value="${project.basedir}/buildscripts/build-info"/>
                                     <arg value="${project.version}"/>
                                 </exec>
@@ -514,12 +509,12 @@
                                 def proc = 'ldd ${native.build.path}/libcudfjni.so'.execute()
                                 proc.consumeProcessOutput(sout, serr)
                                 proc.waitForOrKill(10000)
-                                def libcudf = ~/libcudf.*\\.so\\s+=>\\s+(.*)libcudf.*\\.so\\s+.*/
+                                def libcudf = ~/libcudf.*\\.so\\s+=&gt;\\s+(.*)libcudf.*\\.so\\s+.*/
                                 def cudfm = libcudf.matcher(sout)
                                 if (cudfm.find()) {
                                     pom.properties['native.cudf.path'] = cudfm.group(1)
                                 } else {
-                                    fail("Could not find cudf as a dependency of libcudfjni out> $sout err> $serr")
+                                    fail("Could not find cudf as a dependency of libcudfjni out&gt; $sout err&gt; $serr")
                                 }
 
                                 def nvccout = new StringBuffer(), nvccerr = new StringBuffer()
